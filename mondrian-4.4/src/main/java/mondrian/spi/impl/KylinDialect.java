@@ -13,18 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 1.修复mondrian会把bigint类型数据作为浮点形解析的bug
- * 排查源码后发现 在JdbcDialectImpl.DEFAULT_TYPE_MAP中
- * -5 被映射成SqlStatement.Type.DOUBLE类型
- * 这种类型通常会被作为返回值
- * 而在 mondrian.mondrian.rolap.aggmatcher.JdbcSchema.java.getDatatype 中
- * -5 被映射成了Datatype.Integer 类型
- * 这种类型通常被作为参数
- * -5 在hive和kylin则是bigint类型
- * 当这种类型传入值的作为参数时 mondrain会把查出来的bigint类型值转换为double然后再作为参数传入
- * 方言类中解析，而很显然，double类型是无法转换为Integer类型 从而出现异常
- * 2.修复当参数是中文时方言会将中文代入upper函数从而导致sql执行失败的bug
- * 修复的方式是判断如何字符串中含有中文则放弃upper函数
+ * kylin只支持对字段使用UPPER函数，而不支持对传入的参数使用UPPER函数
  * Created by liang.q on 2018/2/9.
  */
 public class KylinDialect extends JdbcDialectImpl {
